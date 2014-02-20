@@ -8,9 +8,6 @@ int main(int argc, char *argv[]) {
 	socklen_t cli_len = sizeof(struct sockaddr_in);
 	fd_set readfd;
 	char buffer[1024] = {0};
-	struct timeval timeout;
-	timeout.tv_sec = 2;
-	timeout.tv_usec = 0;
 
 	sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if(sock == -1) {
@@ -30,13 +27,10 @@ int main(int argc, char *argv[]) {
 	}
 
 	while(1) {
-		timeout.tv_sec = 2;
-		timeout.tv_usec = 0;
-
 		FD_ZERO(&readfd);
 		FD_SET(sock, &readfd);
 
-		ret = select(sock + 1, &readfd, NULL, NULL, /*&timeout*/NULL);
+		ret = select(sock + 1, &readfd, NULL, NULL, NULL);
 		switch(ret) {
 		case -1:
 			perror("select error");
